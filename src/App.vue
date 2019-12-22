@@ -3,6 +3,7 @@
   <div id="app">
     <Logo/>
     <AliasShortnerComponent/>
+
   </div>
 
 </template>
@@ -28,11 +29,24 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    margin-top: 50px;
+    margin: 50px auto 0;
+
   }
 
+  label {
+    display:block;
+    margin-bottom:5px;
+    text-align:left;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size:18px;
+    color:white;
+    font-weight:bold;
+  }
+    
   body{
     background: #E74C3C;
   }
+
+  * { margin:0; padding:0; }
 
 </style>

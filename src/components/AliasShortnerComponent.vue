@@ -1,27 +1,39 @@
 <template>
 
-    <form id="form-shortned-link" @submit.prevent="shortner" method="post">
-        
-        <div class="input-labeled">
-            <label>Website</label>
-            <input class="input" name="original_url" v-model="original_url">
+    <div class="container">
+
+        <form id="form-shortned-link" @submit.prevent="shortner" method="post">
+            
+            <div class="container-labeled">
+                <label>Website</label>
+                <input class="input input-bigger" name="original_url" v-model="original_url">
+            </div>
+
+            <div class="container-labeled">
+                <label>Alias</label>
+                <input class="input input-medium" name="alias" v-model="alias">
+            </div>
+
+            <button class="button" @click="shortner">SHORTNER</button>
+
+        </form>
+
+        <div v-if="errors && errors.length">
+            <ErrorsListComponent :errors="errors" />
         </div>
 
-        <div class="input-labeled">
-            <label>Alias</label>
-            <input class="input" name="alias" v-model="alias">
+        <div class="container-labeled" v-if="shortned_url" style="margin-top:20px;">
+            <label>Result</label>
+            <input class="input" style="width:830px;" v-model="shortned_url"/>
         </div>
 
-        <button class="button" @click="shortner">SHORTNER</button>
-
-        {{ shortned_url }}
-        
-    </form>
+    </div>
 
 </template>
 
-
 <script>
+
+import ErrorsListComponent from './ErrorsListComponent.vue';
 
 export default {
 
@@ -29,8 +41,8 @@ export default {
         return {
             'original_url':'',
             'alias': '',
-            'message' : '',
-            'shortned_url': ''
+            'errors': [],
+            'shortned_url': '',
         }
     },
 
@@ -38,29 +50,35 @@ export default {
 
         shortner : function(event) {
 
+            this.reset()
             event.preventDefault();
 
-            // let payload = JSON.stringify({alias: this.alias, original_url: this.original_url})
-            
-            // this.$axios({
-            //     method: 'post',
-            //     url: 'http://localhost:8000/links',
-            //     data: payload,
-            //     headers: {'Content-Type': 'application/json'}
-            // }).then(result => { console.log(result)})
-            //   .catch(error => console.log(error))      
-
-            const data = JSON.stringify({
+            const data = {
                 "alias": this.alias, 
-                "original_url": this.original_url
-            });
+                "redirect_to": this.original_url
+            };
 
             this.$axios.post('/links', data)
-                       .then(result => console.log(result))
-                       .catch(error => console.log(error))
+                       .then(result =>
+
+                            this.shortned_url = result.data.url_shortned,
+
+                        )
+                       .catch(error =>
+                            this.errors = [...error.response.data.errors]
+                        )
                        
+        },
+
+        reset: function(){
+            this.errors = []
+            this.shortned_url = null
         }
 
+    },
+
+    components : {
+        ErrorsListComponent
     }
 
 }
@@ -71,10 +89,15 @@ export default {
 <style scoped>
 
     #form-shortned-link{
-        margin-top:50px;
+        margin:50px auto 0;
+        width:830px;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        align-items: flex-end;
     }
 
-    .input-labeled{
+    .container-labeled{
         display:inline-block;
         margin-right:10px;
     }
@@ -82,22 +105,20 @@ export default {
     .input{
         padding:10px;
         text-align:center;
-        width:300px;
         outline:none;
         font-size:17px;
         font-weight: bold;
         border:0px solid #ccc;
         color:#34495e;
+        box-sizing: border-box;
     }
 
-    label {
-        display:block;
-        margin-bottom:5px;
-        text-align:left;
-        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size:18px;
-        color:white;
-        font-weight:bold;
+    .input-bigger{
+        width:380px;
+    }
+
+    .input-medium{
+        width:280px;
     }
 
     .button{
