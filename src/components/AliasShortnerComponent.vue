@@ -1,6 +1,8 @@
 <template>
 
     <div class="container">
+        
+        <Logo/>
 
         <form id="form-shortned-link" @submit.prevent="shortner" method="post">
             
@@ -18,6 +20,11 @@
 
         </form>
 
+        <div class="processing" v-if="loading">
+            <span class="processing-label">Processing</span>
+            <span class="processing-circle processing-animate"></span>
+        </div>
+        
         <div v-if="errors && errors.length">
             <ErrorsListComponent :errors="errors" />
         </div>
@@ -34,11 +41,13 @@
 <script>
 
 import ErrorsListComponent from './ErrorsListComponent.vue';
+import Logo from './Logo.vue';
 
 export default {
 
     data : function(){
         return {
+            'loading': false,
             'original_url':'',
             'alias': '',
             'errors': [],
@@ -59,26 +68,28 @@ export default {
             };
 
             this.$axios.post('/links', data)
-                       .then(result =>
-
-                            this.shortned_url = result.data.url_shortned,
-
-                        )
-                       .catch(error =>
-                            this.errors = [...error.response.data.errors]
-                        )
+                       .then(result => {
+                           this.loading = false;
+                           this.shortned_url = result.data.url_shortned
+                        })
+                       .catch(error => {
+                           this.loading = false;
+                           this.errors = [...error.response.data.errors]
+                       })
                        
         },
 
         reset: function(){
             this.errors = []
             this.shortned_url = null
+            this.loading = true;
         }
 
     },
 
     components : {
-        ErrorsListComponent
+        ErrorsListComponent,
+        Logo
     }
 
 }
@@ -129,6 +140,48 @@ export default {
         font-size:18px;
         color:white;
         font-weight:bold;   
+    }
+
+    .processing{
+        width:830px;
+        margin:10px auto;
+        display:flex;
+        flex-direction: row;
+        align-items:center;
+        justify-content: center;
+        border:2px solid #fff;
+    }
+
+    .processing-label{
+        padding:10px 5px;
+        color:white;
+        font-weight:bold;
+    }
+
+    .processing-circle{
+        width:15px;
+        height:15px;
+        border:3px solid #fff;
+        border-top: 3px solid transparent;
+        border-radius:100%;
+        background:transparent;
+    }
+
+    .processing-animate{
+        animation-name:rotate;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        animation-duration:1s;
+    }
+
+    @keyframes rotate{
+        0%{
+            transform:rotate(0deg);
+        }
+
+        100%{
+            transform:rotate(360deg);
+        }  
     }
 
 </style>

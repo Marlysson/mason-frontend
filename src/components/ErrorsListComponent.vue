@@ -1,21 +1,24 @@
 <template>
 	
 	<ul class="errors-container">
+		
 		<label>Errors</label>
-		<ErrorItemComponent v-for="error in errors" v-bind:error="error" />
+
+		<li class="error-item" 
+			v-for="error in errors" 
+			v-bind:error="error" 
+			v-bind:key="error">
+			{{error}}
+		</li>		
+
 	</ul>
 
 </template>
 
 <script>
 
-import ErrorItemComponent from './ErrorItemComponent.vue';
-
 export default{
-	props : ['errors'],
-	components: {
-		ErrorItemComponent
-	}
+	props : ['errors']
 }
 
 </script>
@@ -25,6 +28,17 @@ export default{
 .errors-container{
     margin:10px auto 0;
     width:830px;
+}
+
+.error-item{
+		list-style-type: none;
+		border:2px solid white;
+		color:white;
+		padding:10px 0 10px 10px;
+		text-align: left;
+		width:815px;
+		font-weight: bold;
+		margin-bottom:10px;
 }
 
 </style>

@@ -1,25 +1,22 @@
 <template>
   
   <div id="app">
-    <Logo/>
-    <AliasShortnerComponent/>
-
+    <CreateShortnedLink/>
   </div>
 
 </template>
 
 <script>
 
-import Logo from './components/Logo.vue';
-import AliasShortnerComponent  from "./components/AliasShortnerComponent.vue";
+  import CreateShortnedLink from "./pages/CreateShortnedLink.vue";
 
-export default {
-  name: 'app',
-  components: {
-    Logo,
-    AliasShortnerComponent
+  export default {
+      name: 'app',
+      components: {
+        CreateShortnedLink
+      }
   }
-}
+
 </script>
 
 <style>
