@@ -2,21 +2,21 @@
 
     <div class="container">
         
-        <Logo/>
+        <Header/>
 
         <form id="form-shortned-link" @submit.prevent="shortner" method="post">
             
             <div class="container-labeled">
                 <label>Website</label>
-                <input class="input input-bigger" name="original_url" v-model="original_url">
+                <input class="input input-bigger" placeholder="Paste here your website" name="website" v-model="website">
             </div>
 
             <div class="container-labeled">
                 <label>Alias</label>
-                <input class="input input-medium" name="alias" v-model="alias">
+                <input class="input input-medium" placeholder="Paste here your alias" name="alias" v-model="alias">
             </div>
 
-            <button class="button" @click="shortner">SHORTNER</button>
+            <button class="button" @click="shorten">SHORTEN</button>
 
         </form>
 
@@ -29,10 +29,7 @@
             <ErrorsListComponent :errors="errors" />
         </div>
 
-        <div class="container-labeled" v-if="shortned_url" style="margin-top:20px;">
-            <label>Result</label>
-            <input class="input" style="width:830px;" v-model="shortned_url"/>
-        </div>
+        <ResultLinkShortned v-if="shortened_successful" :result="result"/>
 
     </div>
 
@@ -41,55 +38,72 @@
 <script>
 
 import ErrorsListComponent from './ErrorsListComponent.vue';
-import Logo from './Logo.vue';
+import Header from './Header.vue';
+import ResultLinkShortned from './ResultLinkShortned.vue';
 
 export default {
 
     data : function(){
         return {
             'loading': false,
-            'original_url':'',
+            'shortened_successful': false,
+            'website':'',
             'alias': '',
             'errors': [],
-            'shortned_url': '',
+            'result': {}
         }
     },
 
     methods: {
 
-        shortner : function(event) {
+        shorten : function(event) {
 
             this.reset()
             event.preventDefault();
 
             const data = {
                 "alias": this.alias, 
-                "redirect_to": this.original_url
+                "website": this.website
             };
 
             this.$axios.post('/links', data)
                        .then(result => {
+                           
                            this.loading = false;
-                           this.shortned_url = result.data.url_shortned
+                           this.result = result.data,
+                           this.shortened_successful = true;
+
+                           this.restart();
+
                         })
                        .catch(error => {
+                           
                            this.loading = false;
                            this.errors = [...error.response.data.errors]
+
                        })
+
                        
         },
 
         reset: function(){
             this.errors = []
             this.shortned_url = null
-            this.loading = true;
+            this.loading = true
+            this.shortened_successful = false
+        },
+
+        restart : function(){
+            this.alias = "";
+            this.website = "";
         }
 
     },
 
     components : {
         ErrorsListComponent,
-        Logo
+        Header,
+        ResultLinkShortned
     }
 
 }
@@ -99,9 +113,14 @@ export default {
 
 <style scoped>
 
-    #form-shortned-link{
-        margin:50px auto 0;
+    .container{
         width:830px;
+        margin:100px auto;
+    }
+
+    #form-shortned-link{
+        margin-top:50px;
+        width:100%;
         display: flex;
         justify-content: space-between;
         flex-direction: row;
