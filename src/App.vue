@@ -43,7 +43,10 @@
     background: #E74C3C;
   }
 
-  * { margin:0; padding:0; }
+  * { 
+    margin:0; padding:0; 
+    box-sizing: border-box;
+  }
 
   .block{ display:block;}
   

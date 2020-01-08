@@ -8,12 +8,12 @@
             
             <div class="container-labeled">
                 <label>Website</label>
-                <input class="input input-bigger" placeholder="Paste here your website" name="website" v-model="website">
+                <input class="input input-bigger"  name="website" v-model="website">
             </div>
 
             <div class="container-labeled">
                 <label>Alias</label>
-                <input class="input input-medium" placeholder="Paste here your alias" name="alias" v-model="alias">
+                <input class="input input-medium"  name="alias" v-model="alias">
             </div>
 
             <button class="button" @click="shorten">SHORTEN</button>
@@ -136,11 +136,10 @@ export default {
         padding:10px;
         text-align:center;
         outline:none;
-        font-size:17px;
+        font-size:15px;
         font-weight: bold;
         border:0px solid #ccc;
         color:#34495e;
-        box-sizing: border-box;
     }
 
     .input-bigger{
@@ -152,13 +151,13 @@ export default {
     }
 
     .button{
-        padding:10px 15px;
+        padding:9px 15px;
         border:0;
         cursor:pointer;
-        background:#F1C40F;
-        font-size:18px;
-        color:white;
-        font-weight:bold;   
+        border:1px solid #fff;
+        color:#E74C3C;
+        font-size:15px;
+        font-weight:bold;
     }
 
     .processing{
